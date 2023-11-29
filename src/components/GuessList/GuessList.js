@@ -1,7 +1,7 @@
 import React from 'react';
 import Guess from '../Guess';
 
-function GuessList({ guessList }) {
+function GuessList({ guessList, answer }) {
   return (
     <div className="guess-results">
       {guessList
@@ -10,7 +10,8 @@ function GuessList({ guessList }) {
             <Guess
               key={id}
               guess={value}
-              parentKey={id} />
+              parentKey={id}
+              answer={answer} />
           ))}
     </div>
   );
