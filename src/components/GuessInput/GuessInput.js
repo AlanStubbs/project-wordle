@@ -1,19 +1,21 @@
 import React from 'react';
 
-function GuessInput() {
+function GuessInput({ addGuess }) {
   const [guess, setGuess] = React.useState('');
   return (
     <form className="guess-input-wrapper"
       onSubmit={event => {
         event.preventDefault();
 
-        console.log(guess);
+        console.log({ guess });
+        addGuess({ guess });
         setGuess('');
       }}>
       <label htmlFor="guess-input">Enter guess:</label>
       <input
         id="guess-input"
         type="text"
+        required
         minLength={5}
         maxLength={5}
         pattern='[a-zA-Z]{5}'
