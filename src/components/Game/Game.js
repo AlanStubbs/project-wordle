@@ -5,30 +5,13 @@ import { WORDS } from '../../data';
 import GuessInput from '../GuessInput/GuessInput';
 import GuessList from '../GuessList/GuessList';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
+import SuccessBanner from '../SuccessBanner/SuccessBanner';
+import FailureBanner from '../FailureBanner/FailureBanner';
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
 console.info({ answer });
-
-function SuccessBanner({ numberOfGuesses }) {
-  return (
-    <div className="happy banner">
-      <p>
-        <strong>Congratulations!</strong> Got it in
-        <strong>{' '}{numberOfGuesses}{' '}guesses</strong>.
-      </p>
-    </div>
-  );
-}
-
-function FailureBanner({ answer }) {
-  return (
-    <div className="sad banner">
-      <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>
-    </div>
-  );
-}
 
 function Game() {
   const [guessList, setGuessList] = React.useState(range(NUM_OF_GUESSES_ALLOWED).map(item => ({
