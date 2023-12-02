@@ -11,6 +11,25 @@ const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
 console.info({ answer });
 
+function SuccessBanner({ numberOfGuesses }) {
+  return (
+    <div className="happy banner">
+      <p>
+        <strong>Congratulations!</strong> Got it in
+        <strong>{' '}{numberOfGuesses}{' '}guesses</strong>.
+      </p>
+    </div>
+  );
+}
+
+function FailureBanner({ answer }) {
+  return (
+    <div className="sad banner">
+      <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>
+    </div>
+  );
+}
+
 function Game() {
   const [guessList, setGuessList] = React.useState(range(NUM_OF_GUESSES_ALLOWED).map(item => ({
     value: range(5).map(_ => ('')),
@@ -18,6 +37,9 @@ function Game() {
   })));
 
   const [numberGuessesMade, setNumberGuessesMade] = React.useState(0);
+  const [foundCorrectAnswer, setFoundCorrectAnswer] = React.useState(false);
+
+  const gameFinished = foundCorrectAnswer || numberGuessesMade === NUM_OF_GUESSES_ALLOWED;
 
   function addGuess({ guess }) {
     if (numberGuessesMade >= NUM_OF_GUESSES_ALLOWED) {
@@ -32,12 +54,20 @@ function Game() {
     setNumberGuessesMade(numberGuessesMade + 1);
 
     setGuessList(nextGuessList);
+
+    setFoundCorrectAnswer(guess === answer);
   }
 
   return (
     <>
       <GuessList guessList={guessList} answer={answer} />
-      <GuessInput addGuess={addGuess} />
+      <GuessInput addGuess={addGuess} disabled={gameFinished} />
+      {gameFinished && (
+        foundCorrectAnswer
+          ? <SuccessBanner numberOfGuesses={numberGuessesMade} />
+          : <FailureBanner answer={answer} />
+      )
+      }
     </>
   );
 }
