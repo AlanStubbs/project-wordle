@@ -44,7 +44,7 @@ function Game() {
   return (
     <>
       <GuessList guessList={guessList} answer={answer} />
-      <GuessInput addGuess={addGuess} disabled={gameFinished} />
+      <GuessInput addGuess={addGuess} disabled={gameFinished} guessList={guessList} answer={answer} />
       {gameFinished && (
         foundCorrectAnswer
           ? <SuccessBanner numberOfGuesses={numberGuessesMade} />
