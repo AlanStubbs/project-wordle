@@ -1,10 +1,11 @@
 import React from 'react';
 
-function Banner({ status, children }) {
+function Banner({ status, children, handleRestart }) {
   return (
     <div className={`${status} banner`}>
       {children}
-    </div>
+      <button className='restart-button' onClick={handleRestart} >Restart Game</button>
+    </div >
   );
 }
 

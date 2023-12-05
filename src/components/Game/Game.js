@@ -8,21 +8,24 @@ import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 import SuccessBanner from '../SuccessBanner/SuccessBanner';
 import FailureBanner from '../FailureBanner/FailureBanner';
 
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
-
 function Game() {
-  const [guessList, setGuessList] = React.useState(range(NUM_OF_GUESSES_ALLOWED).map(item => ({
-    value: range(5).map(_ => ('')),
-    id: crypto.randomUUID()
-  })));
+  function initializeGuessList() {
+    return range(NUM_OF_GUESSES_ALLOWED).map(item => ({
+      value: range(5).map(_ => ('')),
+      id: crypto.randomUUID()
+    }))
+  }
 
+  const [guessList, setGuessList] = React.useState(() => initializeGuessList());
+
+  const [answer, setAnswer] = React.useState(() => sample(WORDS));
   const [numberGuessesMade, setNumberGuessesMade] = React.useState(0);
   const [foundCorrectAnswer, setFoundCorrectAnswer] = React.useState(false);
 
   const gameFinished = foundCorrectAnswer || numberGuessesMade === NUM_OF_GUESSES_ALLOWED;
+
+  // To make debugging easier, we'll log the solution in the console.
+  console.info({ answer });
 
   function addGuess({ guess }) {
     if (numberGuessesMade >= NUM_OF_GUESSES_ALLOWED) {
@@ -41,14 +44,21 @@ function Game() {
     setFoundCorrectAnswer(guess === answer);
   }
 
+  function handleRestart() {
+    setAnswer(sample(WORDS));
+    setNumberGuessesMade(0);
+    setFoundCorrectAnswer(false);
+    setGuessList(initializeGuessList());
+  }
+
   return (
     <>
       <GuessList guessList={guessList} answer={answer} />
       <GuessInput addGuess={addGuess} disabled={gameFinished} guessList={guessList} answer={answer} />
       {gameFinished && (
         foundCorrectAnswer
-          ? <SuccessBanner numberOfGuesses={numberGuessesMade} />
-          : <FailureBanner answer={answer} />
+          ? <SuccessBanner numberOfGuesses={numberGuessesMade} handleRestart={handleRestart} />
+          : <FailureBanner answer={answer} handleRestart={handleRestart} />
       )
       }
     </>
